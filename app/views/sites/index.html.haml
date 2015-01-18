@@ -1,0 +1,39 @@
+#content
+  %nav.navbar.navbar-default
+    .container
+      %h2.navbar-text
+        Free Condoms St. Louis
+
+  #search.well
+    = form_tag sites_path, :method => :get do
+      .input-group
+        %span.input-group-addon
+          Address
+        = text_field_tag :address, @address, class: 'form-control'
+        %span.input-group-btn
+          = submit_tag "Search", class: 'btn btn-primary'
+
+  #map
+    = render partial: "map"
+
+  %table.table.table-bordered.table-striped.sites-table
+    %tbody
+      %tr
+        %th Name
+        %th Street
+        %th City
+        %th State
+        %th Zip
+      - @sites.each do |site|
+        %tr.site
+          %td
+            = site.name || '-'
+          %td
+            = site.street || '-'
+          %td
+            = site.city.try(:name) || '-'
+          %td
+            = site.state.try(:name) || '-'
+          %td
+            = site.zip.try(:code) || '-'
+      

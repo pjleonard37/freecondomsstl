@@ -4,7 +4,9 @@ class SitesController < ApplicationController
 
     @address = params[:address]
 
-    @location = Geocoder.search(@address).first.try(:data)
+    @location = Geocoder.search(@address, bounds: [[39.027718840211605, -91.043701171875],
+                                                   [38.268375880204744 ,-89.8187255859375]])
+                .first.try(:data)
 
     @lng = @location.try(:[], 'geometry').try(:[], 'location').try(:[], 'lng')
     @lat = @location.try(:[], 'geometry').try(:[], 'location').try(:[], 'lat')
@@ -27,6 +29,10 @@ class SitesController < ApplicationController
     @center_lat = @sites.first.try(:lat)
     @center_lng = @sites.first.try(:lng)
 
+    @formatted_address = @location.try(:[], 'formatted_address')
+    
+    @address = @formatted_address if @formatted_address
+    
     respond_to do |format|
       format.html
       format.json { render json: @sites }

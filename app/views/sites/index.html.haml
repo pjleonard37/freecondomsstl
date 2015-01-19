@@ -12,6 +12,8 @@
         = text_field_tag :address, @address, class: 'form-control'
         %span.input-group-btn
           = submit_tag "Search", class: 'btn btn-primary'
+    %span.hint
+      Include street type ("Street", "Avenue", "Blvd", etc.) for more accurate results.
 
   #map.well
     = render partial: "map"

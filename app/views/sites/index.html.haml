@@ -13,27 +13,33 @@
         %span.input-group-btn
           = submit_tag "Search", class: 'btn btn-primary'
 
-  #map
+  #map.well
     = render partial: "map"
 
-  %table.table.table-bordered.table-striped.sites-table
-    %tbody
-      %tr
-        %th Name
-        %th Street
-        %th City
-        %th State
-        %th Zip
-      - @sites.each do |site|
-        %tr.site
-          %td
-            = site.name || '-'
-          %td
-            = site.street || '-'
-          %td
-            = site.city.try(:name) || '-'
-          %td
-            = site.state.try(:name) || '-'
-          %td
-            = site.zip.try(:code) || '-'
+  #sites.well
+    %h4
+      Locations Nearest Me
+    %table.table.table-bordered.table-striped.sites-table
+      %tbody
+        %tr
+          %th Name
+          %th Street
+          %th City
+          %th State
+          %th Zip
+          %th Distance (Miles)
+        - @sites.each do |site|
+          %tr.site
+            %td
+              = site.name || '-'
+            %td
+              = site.street || '-'
+            %td
+              = site.city.try(:name) || '-'
+            %td
+              = site.state.try(:name) || '-'
+            %td
+              = site.zip.try(:code) || '-'
+            %td
+              = ((site.distance / 1000) * 0.6213).round(2)
       

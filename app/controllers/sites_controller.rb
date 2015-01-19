@@ -3,8 +3,26 @@ class SitesController < ApplicationController
   def index
 
     @address = params[:address]
+
+    @location = Geocoder.search(@address).first.try(:data)
+
+    @lng = @location.try(:[], 'geometry').try(:[], 'location').try(:[], 'lng')
+    @lat = @location.try(:[], 'geometry').try(:[], 'location').try(:[], 'lat')
     
-    @sites = Site.all
+    @lng = @lng || -90
+    @lat = @lat || 38
+    
+    @sites = Site.geo_near({ type: 'Point', coordinates: [@lng, @lat] })
+             .spherical
+
+    @distances = @sites.as_json.map { |site| site.try(:[], 'geo_near_distance') }
+    @sites_with_distances = @sites.to_a.zip(@distances)
+    @sites = @sites_with_distances.map do |site_with_distance|
+      site = site_with_distance[0]
+      distance = site_with_distance[1]
+      site.distance = distance
+      site
+    end
     
     @center_lat = @sites.first.try(:lat)
     @center_lng = @sites.first.try(:lng)

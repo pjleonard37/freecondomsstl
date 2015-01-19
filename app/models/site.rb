@@ -2,6 +2,8 @@ class Site
   include Mongoid::Document
   include SimpleEnum::Mongoid
 
+  attr_accessor :distance
+  
   field :name,         type: String
   field :street,       type: String
   belongs_to :city
@@ -18,6 +20,8 @@ class Site
   belongs_to :agency
 
   before_save :set_geo_location
+
+  index({ geo_location: "2dsphere" })
 
   def address_string
     "#{street}, #{city.try(:name)}, #{state.try(:name)}, #{zip.try(:code)}" 
